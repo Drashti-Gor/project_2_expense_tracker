@@ -1,0 +1,44 @@
+{% extends 'expense/base.html' %}
+
+{% block body %}
+<body>
+    <div class="ml-5 flex">
+        <header style="text-align: left;">
+            <h1>Welcome to Expense Tracker</h1>
+            <br>
+            <h3>Track all your expenses on one platform!</h3>
+            <br>
+            {% if user.is_authenticated %}
+            <div class="container content" style="text-align: left;">
+                <h4>Hello {{user.username}}!</h4>
+                <div class="mt-3 flex">
+                    <a href="index/" class="button">Add Expense</a>
+                </div>
+            </div>
+            {% else %}    
+            <div class="container content" style="text-align: left;">
+                <h6>Please Login or Sign Up to continue</h6>
+                <div class="mt-3 flex">
+                    <a href="login/" class="button">Login</a>
+                    <a href="signup/" class="button ml-3">Sign Up</a>
+                </div>
+            </div>
+            {% endif %}
+        </header>
+        <div style="margin-left: 100px; margin-top:20px;">
+            <img style="height: 450px;" src="https://cdni.iconscout.com/illustration/premium/thumb/expense-management-4268366-3561009.png?f=webp" alt="">
+        </div>
+    </div>
+        <div class="container flex">
+            
+            <!-- <div style="margin-left: 200px">
+                <img style="height: 400px;" src="https://cdni.iconscout.com/illustration/premium/thumb/expense-management-4268366-3561009.png?f=webp" alt="">
+            </div> -->
+        </div>
+
+        
+    </div>
+    
+</body>
+
+{% endblock %}

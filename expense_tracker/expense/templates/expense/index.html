@@ -1,0 +1,37 @@
+{% extends 'expense/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block body %}
+<div class="m-10 font-bold flex"><h5>Add Expense</h5> <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+  </svg></div>
+    <form method="POST" style="background-color: #F9F6EE" class="shadow-lg m-10 rounded-lg">
+        {% csrf_token %}
+        <div class="form-container px-10 py-10 flex">
+            <div class="mx-10">
+                <div class="mb-3">
+                    <label for="">Expense Name</label>
+                </div>
+                <div class="border">{{expense_form.name}}</div>
+            </div>
+            <div class="mx-10">
+                <div class="mb-3">
+                    <label for="">Amount</label>
+                </div>
+                <div class="border">{{expense_form.amount}}</div>
+            </div>
+            <div class="mx-10">
+                <div class="mb-3">
+                    <label for="">Category</label>
+                </div>
+                <div class="border">{{expense_form.category}}</div>
+            </div>
+            <div class="mx-10 mt-7">
+                <button type="submit" class="btn btn-success">Add</button>
+            </div>
+        </div>
+    </form>
+    
+    
+    
+{% endblock %}

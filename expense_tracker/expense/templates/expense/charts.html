@@ -1,0 +1,196 @@
+{% extends 'expense/base.html' %}
+{% load static %}
+{% block body %}
+
+<div class="flex">
+    <h5 class="m-10 flex">Daily Expenses of last 30 days</h5>
+    <h5 class="m-10 flex pl-60">Categorical Expenses</h5>
+</div>
+
+<div class="flex">
+
+    <div style="background-color: #F9F6EE" class="w-1/2 shadow-lg ml-10 mb-5 rounded-lg">
+        <div class="flex">
+            <div class="expense-row flex flex-wrap font-bold pt-4 px-16">
+                <span>Date</span>
+            </div>
+            <div class="expense-row flex flex-wrap font-bold pt-4 px-16">
+                <span>Amount</span>
+            </div>
+        </div>
+        <hr>
+        <div id="30-day-table">
+            {% for sums in daily_sums %}
+            <div class="flex">
+                <div class="expense-row flex flex-wrap py-3 px-16">
+                    <span >{{sums.date}}</span>
+                </div>
+                <div class="expense-row flex flex-wrap py-3 px-16">
+                    <span>Rs. {{sums.sum}}</span>
+                </div>
+            </div>
+            
+            {% endfor %}
+        </div>
+    </div>
+
+    <div style="background-color: #F9F6EE" class="w-1/2 shadow-lg mx-10 mb-5 rounded-lg">
+        <div class="flex">
+            <div class="expense-row flex flex-wrap font-bold pt-4 px-16">
+                <span>Category</span>
+            </div>
+            <div class="expense-row flex flex-wrap font-bold pt-4 px-16">
+                <span>Amount</span>
+            </div>
+        </div>
+        <hr>
+        <div id="cat-sum-table">
+            {% for category in categorical_sums %}
+            <div class="flex">
+                <div class="expense-row flex flex-wrap py-3 px-16">
+                    <span>{{category.category}}</span>
+                </div>
+                <div class="expense-row flex flex-wrap py-3 px-16">
+                    <span>Rs. {{category.sum}}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+</div>
+
+<!-- <div>
+    <h5 class="m-10 flex">Daily Expenses of last 30 days</h5>
+    <div class="w-1/3 shadow-lg ml-10 mb-5 rounded-lg">
+        <table style="border:5px; align-items: center;" >
+            <th class="px-10 py-3">
+             <td>Date</td>
+             <td>Amount</td>
+            </th>
+            {% for sums in daily_sums %}
+                <tr>
+                    <td>{{sums.date}}</td>
+                    <td>Rs. {{sums.sum}}</td>
+               </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div> -->
+<div class="flex">
+    <h5 class="m-10 flex">Daily Expenses Chart</h5>
+    <h5 class="m-10 flex pl-80">Expense spread accross categories</h5>
+</div>
+<div class="flex">
+    <div style="background-color: #F9F6EE" class="w-1/2 shadow-lg ml-10 mb-5 rounded-lg py-16 px-10">
+        <canvas id="myChart1" width="400" height="400"></canvas>
+    </div>
+    <div style="background-color: #F9F6EE" class="w-1/2 shadow-lg mx-10 mb-5 rounded-lg py-16 px-10">
+        <canvas id="myChart" width="400" height="400"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+<script>
+
+    const cats = []
+    const cat_sums=[]
+
+    const dates=[]
+    const sums=[]
+    
+    const catSumDiv = document.getElementById('cat-sum-table').getElementsByTagName('span');
+    
+    for(i=0;i<catSumDiv.length;i++){
+        if(i%2 ==1){
+            cat_sums.push(catSumDiv[i].innerText.replace("Rs.",""))
+        }else{
+            cats.push(catSumDiv[i].innerText)
+        }
+    }
+
+    const dailySumDiv = document.getElementById('30-day-table').getElementsByTagName('span');
+    
+    for(i=0;i<dailySumDiv.length;i++){
+        if(i%2 ==1){
+            sums.push(dailySumDiv[i].innerText.replace("Rs.",""))
+        }else{
+            dates.push(dailySumDiv[i].innerText)
+        }
+    }
+    console.log(sums);
+    console.log(dates);
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: cats,
+            datasets: [{
+                label: 'Expense across categories',
+                data: cat_sums,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    var ctx1 = document.getElementById('myChart1').getContext('2d');
+    var myChart1 = new Chart(ctx1, {
+    type: 'line',
+    data: {
+        labels: dates,
+        datasets: [{
+            label: 'Sum of daily expenses',
+            data: sums,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+{% endblock %}
